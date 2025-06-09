@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+npm install เพื่อติดตั้งโปรเจก
 
-## Getting Started
+//สิ่งที่ติดตั้ง
+<!-- ติดตั้ง nextjs -->
 
-First, run the development server:
+npx create-next-app@latest
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<!-- ติดตั้ง prisma -->
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+npx install prisma --save-dev
+npx prisma init
+npm install @prisma/client
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+//อัพเข้าไปในฐานข้อมูลใช้
+npx prisma db push \*\*mongodb ใช้ migrate ไม่ได้ ใช้ได้แค่ SQL
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+<!-- Config -->
 
-## Learn More
+import { PrismaClient } from "@prisma/client"
 
-To learn more about Next.js, take a look at the following resources:
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+export const prisma = globalForPrisma.prisma || new PrismaClient()
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
 
-## Deploy on Vercel
+<!-- Shadcn -->
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+npx shadcn@latest init
+npx shadcn@latest add button dialog input label select
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+npm i react-toastify
+
+<!-- รู้จักกับ Method ของ prisma && Syntax && Argument -->
+
+await prisma.user.create()
+
+create()
+createMany()
+upsert()
+
+findUnique()
+findFirst()
+findMany()
+
+update()
+updateMany()
+
+delete()
+deleteMany()
+
+where //เงื่อนไขการค้นหา
+data // ข้อมูลที่ต้องการสร้าง
+skipDuplicates //ข้ามข้อมูลที่ซ้ำ (เช่น field ที่ @unique)
+orderBy //เรียงลำดับผลลัพธ์
+select //เลือกเฉพาะ field
+include //รวมความสัมพันธ์ (relations)
+take // จำนวนที่จะดึง (limit)
